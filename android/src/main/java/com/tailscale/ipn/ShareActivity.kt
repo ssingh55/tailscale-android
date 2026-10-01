@@ -49,6 +49,26 @@ class ShareActivity : ComponentActivity() {
   @OptIn(ExperimentalMaterial3Api::class)
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
+
+    val intent = intent
+    if (intent == null || intent.action == null || intent.type == null) {
+      TSLog.e(TAG, "Intent validation failed - missing required intent data")
+      finish()
+      return
+    }
+
+    when (intent.action) {
+      Intent.ACTION_SEND,
+      Intent.ACTION_SEND_MULTIPLE -> {
+        // Valid actions, continue processing
+      }
+      else -> {
+        TSLog.e(TAG, "Unexpected intent action: ${intent.action}")
+        finish()
+        return
+      }
+    }
+
     setContent {
       AppTheme {
         Surface(color = MaterialTheme.colorScheme.inverseSurface) { // Background for the letterbox
